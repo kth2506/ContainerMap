@@ -36,7 +36,7 @@ void AddData(int _Key, int _Value)
 	if (iter == Numbers.end())
 		Numbers.insert(make_pair(_Key, _Value));
 	else
-			iter->second = _Value;
+		iter->second = _Value;
 }
 
 /*
