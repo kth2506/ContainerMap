@@ -1,6 +1,7 @@
-// ** ContainerMap ver0.3 06.17 - 1
+// ** ContainerMap ver0.3 06.17 - 2
 
 #include <iostream>
+#include <list>
 #include <string>
 #include <map>
 
@@ -38,7 +39,7 @@ struct Player : public Object
 	Player(const Transform& _Info) : Object(_Info) {};
 };
 
-map<string, Object*> Objects;
+map<string, list<Object*>> Objects;
 
 void AddObject(string _Key, Object* _Object);
 void Initialize();
@@ -46,9 +47,24 @@ void Initialize();
 int main(void)
 {
 	Initialize();
-	cout << Objects["Player"]->Info.Position.x << endl;
-	cout << Objects["Player"]->Info.Position.y << endl;
-	cout << Objects["Player"]->Info.Position.z << endl;
+	Transform Info;
+	Info.Position.x = 10;
+	Info.Position.y = 20;
+	Info.Position.z = 30;
+
+	AddObject("Player", new Player);
+
+	for (auto iter = Objects["Player"].begin(); iter != Objects["Player"].end(); ++iter)
+	{
+		list<Object*> Temp;
+		cout << *iter << endl;
+	}
+
+
+	
+	//cout << Objects["Player"]->Info.Position.x << endl;
+	//cout << Objects["Player"]->Info.Position.y << endl;
+	//cout << Objects["Player"]->Info.Position.z << endl;
 
 	return 0;
 
@@ -62,17 +78,22 @@ void Initialize()
 	Info.Position.y = 20;
 	Info.Position.z = 30;
 
-	Objects["Player"] = new Player(Info);
+	//Objects["Player"] = new Player(Info);
 }
 
 void AddObject(string _Key, Object* _Object)
 {
-	map<string, Object*>::iterator iter = Objects.find(_Key);
+	map<string, list<Object*>>::iterator iter = Objects.find(_Key);
+
 
 	if (iter == Objects.end())
-		Objects.insert(make_pair(_Key, _Object));
+	{
+		list<Object*> Temp;
+		Temp.push_back(_Object);
+		Objects.insert(make_pair(_Key, Temp));
+	}
 	else
-		iter->second = _Object;
+		iter->second.push_back(_Object);
 }
 
 /*
