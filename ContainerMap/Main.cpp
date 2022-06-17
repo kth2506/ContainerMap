@@ -1,42 +1,78 @@
-// ** ContainerMap ver0.2 06.16
+// ** ContainerMap ver0.3 06.17 - 1
 
 #include <iostream>
 #include <string>
 #include <map>
 
 using namespace std;
+struct Vector3
+{
+	float x, y, z;
+	Vector3()
+		: x(0.0f) , y(0.0f) , z(0.0f) {};
+	Vector3(const float _x, const float _y)
+		: x(_x) , y(_y) , z(0.0f) {};
+	Vector3(const float _x, const float _y, const float _z)
+		: x(_x) , y(_y) , z(_z) {};
+};
 
-map<int, int> Numbers;
+struct Transform
+{
+	Vector3 Position;
+	Vector3 Rotation;
+	Vector3 Scale;
+};
 
-void AddData(int _Key , int _Value);
+struct Object
+{
+	Transform Info;
+
+	Object() {};
+	Object(const Transform& _Info) : Info(_Info) {};
+};
+
+struct Player : public Object
+{
+
+	Player() {};
+	Player(const Transform& _Info) : Object(_Info) {};
+};
+
+map<string, Object*> Objects;
+
+void AddObject(string _Key, Object* _Object);
+void Initialize();
 
 int main(void)
 {
-	Numbers[1] = 10;
-	Numbers[2] = 10;
-
-	Numbers.insert(make_pair(0, 30));
-	Numbers.insert(make_pair(3, 30));
-	Numbers.insert(make_pair(4, 40));
-	
-	AddData(2, 200);
-
-	for (map<int, int>::iterator iter = Numbers.begin();
-		iter != Numbers.end(); ++iter)
-		cout << iter->second << endl;
-
+	Initialize();
+	cout << Objects["Player"]->Info.Position.x << endl;
+	cout << Objects["Player"]->Info.Position.y << endl;
+	cout << Objects["Player"]->Info.Position.z << endl;
 
 	return 0;
+
 }
 
-void AddData(int _Key, int _Value)
+void Initialize()
 {
-	map<int, int>::iterator iter = Numbers.find(_Key);
+	Transform Info;
 
-	if (iter == Numbers.end())
-		Numbers.insert(make_pair(_Key, _Value));
+	Info.Position.x = 10;
+	Info.Position.y = 20;
+	Info.Position.z = 30;
+
+	Objects["Player"] = new Player(Info);
+}
+
+void AddObject(string _Key, Object* _Object)
+{
+	map<string, Object*>::iterator iter = Objects.find(_Key);
+
+	if (iter == Objects.end())
+		Objects.insert(make_pair(_Key, _Object));
 	else
-		iter->second = _Value;
+		iter->second = _Object;
 }
 
 /*
