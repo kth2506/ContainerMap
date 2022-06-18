@@ -1,4 +1,4 @@
-// ** ContainerMap ver0.3 06.17 - 2
+// ** ContainerMap ver0.3 06.18
 
 #include <iostream>
 #include <list>
@@ -52,12 +52,18 @@ int main(void)
 	Info.Position.y = 20;
 	Info.Position.z = 30;
 
-	AddObject("Player", new Player);
+	AddObject("Player", new Player(Info));
+	AddObject("Player", new Player(Info));
 
-	for (auto iter = Objects["Player"].begin(); iter != Objects["Player"].end(); ++iter)
+	for (map<string, list<Object*>>::iterator iter = Objects.begin(); iter != Objects.end(); ++iter)
 	{
-		list<Object*> Temp;
-		cout << *iter << endl;
+		cout << "[" << iter->first << "]" << endl;
+		for (list<Object*>::iterator iter2 = iter->second.begin();
+			iter2 != iter->second.end(); ++iter2)
+		{
+			cout << (*iter2)->Info.Position.x << ", " <<
+				(*iter2)->Info.Position.y << ", " << (*iter2)->Info.Position.z << endl;
+		}
 	}
 
 
